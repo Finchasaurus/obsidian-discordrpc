@@ -1,35 +1,35 @@
-import { PluginSettingTab, Setting, TFile } from "obsidian";
-import { Logger } from "src/logger";
-import ObsidianDiscordRPC from "src/main";
+import { PluginSettingTab, Setting, TFile } from "obsidian"
+import { Logger } from "src/logger"
+import ObsidianDiscordRPC from "src/main"
 
 export class DiscordRPCSettingsTab extends PluginSettingTab {
-  public logger: Logger = new Logger();
+  public logger: Logger = new Logger()
 
   display(): void {
-    let { containerEl } = this;
-    const plugin: ObsidianDiscordRPC = (this as any).plugin;
+    let { containerEl } = this
+    const plugin: ObsidianDiscordRPC = (this as any).plugin
 
-    containerEl.empty();
-    containerEl.createEl("h2", { text: "Discord Rich Presence Settings" });
+    containerEl.empty()
+    containerEl.createEl("h2", { text: "Discord Rich Presence Settings" })
 
-    containerEl.createEl("h3", { text: "Vault Name Settings" });
+    containerEl.createEl("h3", { text: "Vault Name Settings" })
     new Setting(containerEl)
       .setName("Privacy Mode")
       .setDesc("Enable this to hide the name of the vault and Hide file names")
       .addToggle((boolean) =>
         boolean.setValue(plugin.settings.privacyMode).onChange((value) => {
-          plugin.settings.privacyMode = value;
-          plugin.saveData(plugin.settings);
+          plugin.settings.privacyMode = value
+          plugin.saveData(plugin.settings)
 
           if (boolean.getValue()) {
-            this.logger.logIgnoreNoNotice("Privacy Mode Enabled");
+            this.logger.logIgnoreNoNotice("Privacy Mode Enabled")
           } else {
-            this.logger.logIgnoreNoNotice("Privacy Mode Disabled");
+            this.logger.logIgnoreNoNotice("Privacy Mode Disabled")
           }
 
-          plugin.setActivity("", "", "");
+          plugin.setActivity("", "", "")
         })
-      );
+      )
     new Setting(containerEl)
       .setName("Show Vault Name")
       .setDesc(
@@ -37,22 +37,22 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
       )
       .addToggle((boolean) =>
         boolean.setValue(plugin.settings.showVaultName).onChange((value) => {
-          plugin.settings.showVaultName = value;
-          plugin.saveData(plugin.settings);
+          plugin.settings.showVaultName = value
+          plugin.saveData(plugin.settings)
 
           if (boolean.getValue()) {
-            this.logger.logIgnoreNoNotice("Vault Name is now Visible");
+            this.logger.logIgnoreNoNotice("Vault Name is now Visible")
           } else {
-            this.logger.logIgnoreNoNotice("Vault Name is no longer Visible");
+            this.logger.logIgnoreNoNotice("Vault Name is no longer Visible")
           }
 
           plugin.setActivity(
             this.app.vault.getName(),
             plugin.currentFile.basename,
             plugin.currentFile.extension
-          );
+          )
         })
-      );
+      )
 
     new Setting(containerEl)
       .setName("Set Custom Vault Name")
@@ -61,18 +61,18 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
       )
       .addText((text) =>
         text.setValue(plugin.settings.customVaultName).onChange((value) => {
-          plugin.settings.customVaultName = value;
-          plugin.saveData(plugin.settings);
+          plugin.settings.customVaultName = value
+          plugin.saveData(plugin.settings)
 
           plugin.setActivity(
             this.app.vault.getName(),
             plugin.currentFile.basename,
             plugin.currentFile.extension
-          );
+          )
         })
-      );
+      )
 
-    containerEl.createEl("h3", { text: "File Name Settings" });
+    containerEl.createEl("h3", { text: "File Name Settings" })
     new Setting(containerEl)
       .setName("Show Current File Name")
       .setDesc("Enable this to show the name of the file you are working on.")
@@ -80,22 +80,22 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
         boolean
           .setValue(plugin.settings.showCurrentFileName)
           .onChange((value) => {
-            plugin.settings.showCurrentFileName = value;
-            plugin.saveData(plugin.settings);
+            plugin.settings.showCurrentFileName = value
+            plugin.saveData(plugin.settings)
 
             if (boolean.getValue()) {
-              this.logger.logIgnoreNoNotice("File Name is now Visable");
+              this.logger.logIgnoreNoNotice("File Name is now Visable")
             } else {
-              this.logger.logIgnoreNoNotice("File Name is no longer Visable");
+              this.logger.logIgnoreNoNotice("File Name is no longer Visable")
             }
 
             plugin.setActivity(
               this.app.vault.getName(),
-              plugin.currentFile.basename,
+              plugin.currentFile.path,
               plugin.currentFile.extension
-            );
+            )
           })
-      );
+      )
 
     new Setting(containerEl)
       .setName("Show File Extension")
@@ -104,18 +104,39 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
         boolean
           .setValue(plugin.settings.showFileExtension)
           .onChange((value) => {
-            plugin.settings.showFileExtension = value;
-            plugin.saveData(plugin.settings);
+            plugin.settings.showFileExtension = value
+            plugin.saveData(plugin.settings)
 
             plugin.setActivity(
               this.app.vault.getName(),
               plugin.currentFile.basename,
               plugin.currentFile.extension
-            );
+            )
           })
-      );
+      )
+    new Setting(containerEl)
+      .setName("Show full path")
+      .setDesc("Enable this to show path of obsidian vault")
+      .addToggle((boolean) =>
+        boolean.setValue(plugin.settings.showPath).onChange((value) => {
+          plugin.settings.showPath = value
+          plugin.saveData(plugin.settings)
 
-    containerEl.createEl("h3", { text: "Time Settings" });
+          if (boolean.getValue()) {
+            this.logger.logIgnoreNoNotice("Path is now visible")
+          } else {
+            this.logger.logIgnoreNoNotice("Path is now no longer visible")
+          }
+
+          plugin.setActivity(
+            this.app.getName(),
+            plugin.currentFile.basename,
+            plugin.currentFile.extension
+          )
+        })
+      )
+
+    containerEl.createEl("h3", { text: "Time Settings" })
     new Setting(containerEl)
       .setName("Use Obsidian Total Time")
       .setDesc(
@@ -123,18 +144,18 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
       )
       .addToggle((boolean) => {
         boolean.setValue(plugin.settings.useLoadedTime).onChange((value) => {
-          plugin.settings.useLoadedTime = value;
-          plugin.saveData(plugin.settings);
+          plugin.settings.useLoadedTime = value
+          plugin.saveData(plugin.settings)
 
           plugin.setActivity(
             this.app.vault.getName(),
             plugin.currentFile.basename,
             plugin.currentFile.extension
-          );
-        });
-      });
+          )
+        })
+      })
 
-    containerEl.createEl("h3", { text: "Status Bar Settings" });
+    containerEl.createEl("h3", { text: "Status Bar Settings" })
     new Setting(containerEl)
       .setName("Automatically hide Status Bar")
       .setDesc(
@@ -144,38 +165,43 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
         boolean
           .setValue(plugin.settings.autoHideStatusBar)
           .onChange((value) => {
-            plugin.settings.autoHideStatusBar = value;
-            plugin.saveData(plugin.settings);
+            plugin.settings.autoHideStatusBar = value
+            plugin.saveData(plugin.settings)
 
             plugin.setActivity(
               this.app.vault.getName(),
               plugin.currentFile.basename,
               plugin.currentFile.extension
-            );
-          });
-      });
-    
-      new Setting(containerEl)
+            )
+          })
+      })
+
+    new Setting(containerEl)
       .setName("Show Connected Time")
       .setDesc(
         "Show time spent editing file or time connected to Discord in the status bar."
       )
       .addToggle((boolean) => {
-        boolean.setValue(plugin.settings.showConnectionTimer).onChange((value) => {
-          plugin.settings.showConnectionTimer = value;
-          plugin.saveData(plugin.settings);
+        boolean
+          .setValue(plugin.settings.showConnectionTimer)
+          .onChange((value) => {
+            plugin.settings.showConnectionTimer = value
+            plugin.saveData(plugin.settings)
 
-          plugin.setActivity(
-            this.app.vault.getName(),
-            plugin.currentFile.basename,
-            plugin.currentFile.extension
-          );
-          // needed to make timer disappear, otherwise it will freeze
-          plugin.statusBar.displayState(plugin.getState(), plugin.settings.autoHideStatusBar);
-        });
-      });
+            plugin.setActivity(
+              this.app.vault.getName(),
+              plugin.currentFile.basename,
+              plugin.currentFile.extension
+            )
+            // needed to make timer disappear, otherwise it will freeze
+            plugin.statusBar.displayState(
+              plugin.getState(),
+              plugin.settings.autoHideStatusBar
+            )
+          })
+      })
 
-    containerEl.createEl("h3", { text: "Startup Settings" });
+    containerEl.createEl("h3", { text: "Startup Settings" })
     new Setting(containerEl)
       .setName("Automatically Connect to Discord")
       .setDesc(
@@ -183,38 +209,38 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
       )
       .addToggle((boolean) => {
         boolean.setValue(plugin.settings.connectOnStart).onChange((value) => {
-          plugin.settings.connectOnStart = value;
-          plugin.saveData(plugin.settings);
+          plugin.settings.connectOnStart = value
+          plugin.saveData(plugin.settings)
 
           plugin.setActivity(
             this.app.vault.getName(),
             plugin.currentFile.basename,
             plugin.currentFile.extension
-          );
-        });
-      });
+          )
+        })
+      })
 
-    containerEl.createEl("h3", { text: "Notice Settings" });
+    containerEl.createEl("h3", { text: "Notice Settings" })
     new Setting(containerEl)
       .setName("Show Notices")
       .setDesc("Enable this to show connection Notices.")
       .addToggle((boolean) =>
         boolean.setValue(plugin.settings.showPopups).onChange((value) => {
-          plugin.settings.showPopups = value;
-          plugin.saveData(plugin.settings);
+          plugin.settings.showPopups = value
+          plugin.saveData(plugin.settings)
 
           if (boolean.getValue()) {
-            this.logger.logIgnoreNoNotice("Notices Enabled");
+            this.logger.logIgnoreNoNotice("Notices Enabled")
           } else {
-            this.logger.logIgnoreNoNotice("Notices Disabled");
+            this.logger.logIgnoreNoNotice("Notices Disabled")
           }
 
           plugin.setActivity(
             this.app.vault.getName(),
             plugin.currentFile.basename,
             plugin.currentFile.extension
-          );
+          )
         })
-      );
+      )
   }
 }

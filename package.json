@@ -8,12 +8,7 @@
     "build": "rollup --config rollup.config.js",
     "release": "standard-version"
   },
-  "keywords": [
-    "obsidian",
-    "obsidianmd",
-    "discord",
-    "discord-rpc"
-  ],
+  "keywords": ["obsidian", "obsidianmd", "discord", "discord-rpc"],
   "author": "Luke Leppan",
   "license": "MIT",
   "devDependencies": {
