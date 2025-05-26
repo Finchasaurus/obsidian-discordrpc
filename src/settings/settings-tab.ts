@@ -129,7 +129,7 @@ export class DiscordRPCSettingsTab extends PluginSettingTab {
           }
 
           plugin.setActivity(
-            this.app.getName(),
+            this.app.vault.getName(),
             plugin.currentFile.basename,
             plugin.currentFile.extension
           )
